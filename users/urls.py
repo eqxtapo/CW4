@@ -6,9 +6,16 @@ from django.urls import path
 from django.views.decorators.cache import cache_page
 
 from users.apps import UsersConfig
-from users.views import (PasswordRecoveryView, UserCreateView, UserDeleteView,
-                         UserDetailView, UserListView, UserUpdateView,
-                         email_verification, user_logout)
+from users.views import (
+    PasswordRecoveryView,
+    UserCreateView,
+    UserDeleteView,
+    UserDetailView,
+    UserListView,
+    UserUpdateView,
+    email_verification,
+    user_logout,
+)
 
 # flake8: noqa
 app_name = UsersConfig.name

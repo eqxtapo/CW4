@@ -1,6 +1,10 @@
+# flake8: noqa
 from django import forms
-from django.contrib.auth.forms import (PasswordResetForm, SetPasswordForm,
-                                       UserCreationForm)
+from django.contrib.auth.forms import (
+    PasswordResetForm,
+    SetPasswordForm,
+    UserCreationForm,
+)
 from django.forms import ModelForm
 from django.urls import reverse_lazy
 

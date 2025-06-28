@@ -8,8 +8,13 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from mailing.models import AttemptMailing, Mailing, Message, ReceiveMail
 
-from .forms import (MailingForm, MailingModeratorForm, MessageForm,
-                    ReceiveMailForm, ReceiveMailModeratorForm)
+from .forms import (
+    MailingForm,
+    MailingModeratorForm,
+    MessageForm,
+    ReceiveMailForm,
+    ReceiveMailModeratorForm,
+)
 from .services import get_mailing_from_cache
 
 
