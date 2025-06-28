@@ -172,7 +172,7 @@ class MessageListView(ListView):
     def get_queryset(self, *args, **kwargs):
 
         queryset = super().get_queryset()
-        print(queryset)  # Для отладки
+
         return queryset
 
 

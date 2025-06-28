@@ -34,6 +34,11 @@
                          <li>
                              <a class="nav-link" href="{% url 'mailing:contacts' %}">Контакты</a>
                          </li>
+                        {% if user.is_superuser %}
+                        <li>
+                             <a class="nav-link" href="{% url 'users:user_list' %}">Список пользователей</a>
+                         </li>
+                        {%endif%}
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -48,9 +53,6 @@
                                  {% if user.is_authenticated %}
                                 <li><a class="dropdown-item" href="{% url 'users:user_detail' user.pk%}">Профиль</a></li>
 
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'users:user_list' %}">Список пользователей</a>
-                                </li>
 
                                 {% endif %}
                                 {% else %}
@@ -63,6 +65,7 @@
 
                             </ul>
                         </li>
+
                     </ul>
                 </div>
             </div>

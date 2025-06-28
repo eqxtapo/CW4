@@ -1,4 +1,3 @@
-# flake8: noqa
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.mail import send_mail
@@ -26,23 +25,18 @@ def run_mail(request, pk):
                 recipient_list=[recipient.mail],
                 fail_silently=False,
             )
-            AttemptMailing.objects.create(
-                date_attempt=timezone.now(),
-                status=AttemptMailing.STATUS_OK,
-                server_response="Email отправлен",
-                mailing=mailing,
-            )
+
         except Exception as e:
-            print(f"Ошибка при отправке письма для {recipient.email}: {str(e)}")
+            print(f"Ошибка при отправке письма для {recipient.mail}: {str(e)}")
             AttemptMailing.objects.create(
                 date_attempt=timezone.now(),
-                status=AttemptMailing.STATUS_NOK,
+                status=Mailing.FINISHED,
                 server_response=str(e),
                 mailing=mailing,
             )
     if mailing.end_sending and mailing.end_sending <= timezone.now():
 
-        mailing.status = Mailing.COMPLETED
+        mailing.status = Mailing.FINISHED
     mailing.save()
     return redirect("mailing:mailing_list")
 

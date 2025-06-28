@@ -26,9 +26,8 @@ class EmailForm(forms.Form):
 
 class MailingForm(StyleFormMixin, ModelForm):
     class Meta:
-        model = Message
-        fields = "__all__"
-        # exclude = ("set_is_active", "owner", "first_sending", "end_sending")
+        model = Mailing
+        fields = ("client", "message", "is_active")
 
 
 class MessageForm(StyleFormMixin, ModelForm):
@@ -36,7 +35,7 @@ class MessageForm(StyleFormMixin, ModelForm):
     class Meta:
 
         model = Message
-        fields = "__all__"
+        fields = ("subject", "content")
 
 
 class ReceiveMailForm(StyleFormMixin, ModelForm):

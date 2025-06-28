@@ -2,44 +2,28 @@
 
 
 {% block content %}
-<main class="flex-shrink-0">
-  <div class="container">
-    <h1 class="mt-5">Получатель рассылки</h1>
-    <p class="lead"></p>
-    <div class="row mb-2">
-    <div class="col-md-12">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <form class="row" method="post" enctype="multipart/form-data">
-                    <div class="card">
-                        <div class="card-body">
-                            {%  csrf_token %}
-                            {{ form.as_p }}
-                        </div>
-                        <div class="row mb-2">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-dark">
-                                {% if object %}
-                                Сохранить
-                                {% else %}
-                                Создать
-                                {% endif %}
-                            </button>
-                        </div>
-                        </div>
-                        <div class="row mb-2">
-                        <div class="col-md-12">
-                            <a class="btn btn-dark" href="{% url 'mailing:receivemail_list' %}" role="button">Назад</a>
-                        </div>
-                        </div>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <form class="row" method="post" enctype="multipart/form-data">
+                <div class="card">
+                    <div class="form-body">
+                        {% csrf_token %}
+                        {{ form.as_p }}
                     </div>
-                </form>
-            </div>
+                    <button type="submit" class="btn btn-primary">
+                        {% if object %}
+                            Сохранить
+                        {% else %}
+                            Создать
+                        {% endif %}
+                    </button>
+                    <a class="btn btn-primary mt-1" href="{% url 'mailing:mailing_list' %}" role="button">Отмена</a>
+
+
+                </div>
+            </form>
         </div>
     </div>
-    </div>
-    </div>
-  </div>
-</main>
+</div>
 {% endblock %}

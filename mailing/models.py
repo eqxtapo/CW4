@@ -113,6 +113,12 @@ class Mailing(models.Model):
 class AttemptMailing(models.Model):
     """Модель «Попытка рассылки»"""
 
+    # STATUS_OK = "Успешно"
+    # STATUS_NOK = "Не успешно"
+    # STATUS_MAILING_ATTEMPT = [
+    #     (STATUS_OK, "Успешно"),
+    #     (STATUS_NOK, "Не успешно"), ]
+
     date_attempt = models.DateTimeField(verbose_name="Дата и время попытки")
     status = models.CharField(max_length=115, verbose_name="Статус попытки")
     response = models.TextField(verbose_name="Комментарии", null=True, blank=True)
