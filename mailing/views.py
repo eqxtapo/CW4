@@ -67,6 +67,11 @@ class MailingListView(ListView):
     def get_queryset(self):
         return Mailing.objects.filter(owner=self.request.user)
 
+    def get_queryset(self):
+        if self.request.user.has_perm("mailing.can_block_mailing"):
+            return Mailing.objects.all()
+        return Mailing.objects.filter(owner=self.request.user)
+
 
 class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
