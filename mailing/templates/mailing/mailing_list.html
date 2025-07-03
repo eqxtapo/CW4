@@ -23,25 +23,21 @@
                     <th>Сообщение</th>
                     <th>Время начала</th>
                     <th>Время окончания</th>
-                    <th>Тема сообщения</th>
                     <th>Статус</th>
                     <th>Активность</th>
-                    {% if user.is_superuser %}
                     <th>Создал</th>
-                    {% endif %}
                     <th>Действия</th>
                 </tr>
                 </thead>
 
                 {% for object in object_list %}
                 <tr>
-                    <td>{{ object.message|truncatechars:30 }}</td>
+                    <td>{{ object.message.subject }}</td>
                     <td>{{ object.first_sending|date:"d M Y" }}</td>
                     <td>{{ object.end_sending|date:"d M Y" }}</td>
-                    <td>{{ object.message.subject }}</td>
                     <td>{{ object.status }}</td>
                     <td>
-                        {% if user.is_superuser %}
+                        {% if user == object.owner or user.is_superuser%}
                         {% if object.is_active %}
                                 <a type="button" class="btn btn-danger btn-sm"
                                    href="{% url 'mailing:block_mailing' object.pk %}">Заблокировать</a>
@@ -53,16 +49,15 @@
                         {{object.is_active|yesno:"Активна, Не активна"}}
                         {% endif %}
                     </td>
-                    {% if user.is_authenticated %}
+                    {% if user == object.owner or user.is_superuser %}
                     <td>{{ object.owner }}</td>
                     {% endif %}
                     <td>
-                        <a class="btn btn-primary btn-sm" href="{% url 'mailing:mailing_detail' object.pk%}">Посмотреть </a>
-                        {% if user.is_authenticated %}
+                        {% if user == object.owner or user.is_superuser %}
                         <a class="btn btn-primary btn-sm" href="{% url 'mailing:mailing_update' object.pk%}">Редактировать</a>
                         <a class="btn btn-danger btn-sm" href="{% url 'mailing:mailing_delete' object.pk%}">Удалить</a>
                         {% endif %}
-                        {% if user.is_superuser %}
+                        {% if user == object.owner %}
                         <a class="btn btn-secondary btn-sm" href="{% url 'mailing:run_mail' object.pk%}">Запустить &raquo;</a>
                         {% endif %}
                     </td>

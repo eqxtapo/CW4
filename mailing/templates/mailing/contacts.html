@@ -1,4 +1,4 @@
-{% extends 'mailing/base.html' %}
+    {% extends 'mailing/base.html' %}
 
 {% block content %}
 
@@ -49,7 +49,7 @@
                             <label for="message">Сообщение</label>
                             <textarea type="text" name="message" class="form-control" id="message" placeholder="Введите сообщение" required></textarea>
                         </div>
-                        <a class="btn btn-dark" href="{% url 'mailing:message' %}" role="button">Отправить</a>
+                        <a class="btn btn-dark" href="{% url 'mailing:contacts' %}" role="button">Отправить</a>
                     </form>
                 </div>
             </div>

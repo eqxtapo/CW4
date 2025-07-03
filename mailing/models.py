@@ -1,4 +1,3 @@
-# flake8: noqa
 from django.db import models
 
 from users.models import User
@@ -7,7 +6,7 @@ from users.models import User
 class ReceiveMail(models.Model):
     """Модель «Получатель рассылки»:"""
 
-    mail = models.EmailField(max_length=255, verbose_name="Письмо", unique=True)
+    mail = models.EmailField(max_length=255, verbose_name="E-mail адрес", unique=True)
     fio = models.CharField(max_length=255, verbose_name="ФИО")
     comment = models.TextField(verbose_name="Комментарии", null=True, blank=True)
     is_active = models.BooleanField(default=True, verbose_name="активность")
@@ -67,9 +66,11 @@ class Mailing(models.Model):
     ]
 
     first_sending = models.DateTimeField(
+        max_length=10,
         verbose_name="Дата первой отправки", null=True, blank=True
     )
     end_sending = models.DateTimeField(
+        max_length=10,
         verbose_name="Дата окончания отправки", null=True, blank=True
     )
 
@@ -113,14 +114,14 @@ class Mailing(models.Model):
 class AttemptMailing(models.Model):
     """Модель «Попытка рассылки»"""
 
-    # STATUS_OK = "Успешно"
-    # STATUS_NOK = "Не успешно"
-    # STATUS_MAILING_ATTEMPT = [
-    #     (STATUS_OK, "Успешно"),
-    #     (STATUS_NOK, "Не успешно"), ]
+    STATUS_OK = "Успешно"
+    STATUS_NOK = "Не успешно"
+    STATUS_MAILING_ATTEMPT = [
+        (STATUS_OK, "Успешно"),
+        (STATUS_NOK, "Не успешно"), ]
 
     date_attempt = models.DateTimeField(verbose_name="Дата и время попытки")
-    status = models.CharField(max_length=115, verbose_name="Статус попытки")
+    status = models.CharField(max_length=115, choices=STATUS_MAILING_ATTEMPT, verbose_name="Статус попытки")
     response = models.TextField(verbose_name="Комментарии", null=True, blank=True)
     mailing = models.ForeignKey(
         Mailing,

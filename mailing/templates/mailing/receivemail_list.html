@@ -26,12 +26,9 @@
                 <thead>
                 <tr>
                     <th>Фото</th>
-                    <th>ФИО получателя</th>
-                    <th>email получателя</th>
+                    <th>Email адрес</th>
                     <th>Комментарий</th>
-                    {% if request.user.is_superuser %}
                     <th>Создал</th>
-                    {% endif %}
                     <th>Действия</th>
                 </tr>
                 </thead>
@@ -42,7 +39,6 @@
                         <img src="{{ object.avatar|media_filter }}" alt="Фото" class="rounded" width="40" height="40">
 
                     </td>
-                    <td>{{ object.fio }}</td>
                     <td>{{ object.mail}}</td>
                     <td>{{ object.comment|truncatechars:30 }}</td>
                    {% if user.is_authenticated %}
@@ -52,7 +48,7 @@
                         <a class="btn btn-primary btn-sm"
                            href="{% url 'mailing:receivemail_detail' object.pk%}">Посмотреть
                             &raquo;</a>
-                        {% if user.owner %}
+                        {% if object.owner or user.is_superuser%}
                         <a class="btn btn-primary btn-sm"
                            href="{% url 'mailing:receivemail_update' object.pk%}">Редактировать
                             &raquo;</a>

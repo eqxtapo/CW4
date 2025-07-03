@@ -6,8 +6,8 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
+import mailing
 from mailing.models import AttemptMailing, Mailing, Message, ReceiveMail
-
 from .forms import (
     MailingForm,
     MailingModeratorForm,
@@ -16,6 +16,8 @@ from .forms import (
     ReceiveMailModeratorForm,
 )
 from .services import get_mailing_from_cache
+
+
 
 
 def base(request):
@@ -63,7 +65,7 @@ class MailingListView(ListView):
     template_name = "mailing/mailing_list.html"
 
     def get_queryset(self):
-        return get_mailing_from_cache()
+        return Mailing.objects.filter(owner=self.request.user)
 
 
 class MailingCreateView(LoginRequiredMixin, CreateView):
@@ -71,6 +73,9 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
     form_class = MailingForm
     template_name = "mailing/mailing_form.html"
     success_url = reverse_lazy("mailing:mailing_list")
+
+    def get_queryset(self):
+        return Mailing.objects.filter(owner=self.request.user)
 
     def form_valid(self, form):
         recipient = form.save()
@@ -85,13 +90,16 @@ class MailingDetailView(LoginRequiredMixin, DetailView):
     template_name = "mailing/receivemail_list.html"
 
     def get_queryset(self):
-        return get_mailing_from_cache()
+        return Mailing.objects.filter(owner=self.request.user)
 
 
 class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy("mailing:mailing_list")
+
+    def get_queryset(self):
+        return Mailing.objects.filter(owner=self.request.user)
 
     def get_form_class(self):
         user = self.request.user
@@ -111,6 +119,9 @@ class MailingDeleteView(LoginRequiredMixin, DeleteView):
 
 class ReceiveMailListView(ListView):
     model = ReceiveMail
+
+    def get_queryset(self):
+        return ReceiveMail.objects.filter(owner=self.request.user)
 
 
 class ReceiveMailDetailView(LoginRequiredMixin, DetailView):
@@ -170,21 +181,15 @@ class MessageListView(ListView):
     template_name = "mailing/message_list.html"
 
     def get_queryset(self, *args, **kwargs):
-
-        queryset = super().get_queryset()
-
-        return queryset
+        return Message.objects.filter(owner=self.request.user)
 
 
 class MessageDetailView(LoginRequiredMixin, DetailView):
     model = Message
     form_class = MessageForm
 
-    def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
-        if not self.request.user.is_superuser:
-            raise PermissionDenied
-        return self.object
+    def get_queryset(self, *args, **kwargs):
+        return Message.objects.filter(owner=self.request.user)
 
 
 class MessageCreateView(LoginRequiredMixin, CreateView):
@@ -192,6 +197,9 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
     form_class = MessageForm
     template_name = "mailing/message_form.html"
     success_url = reverse_lazy("mailing:message_list")
+
+    def get_queryset(self, *args, **kwargs):
+        return Message.objects.filter(owner=self.request.user)
 
     def form_valid(self, form):
         recipient = form.save()
@@ -205,22 +213,13 @@ class MessageUpdateView(LoginRequiredMixin, UpdateView):
     form_class = MessageForm
     success_url = reverse_lazy("mailing:message_list")
 
-    def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
-        if not self.request.user.is_superuser:
-            raise PermissionDenied
-        return self.object
+    def get_queryset(self, *args, **kwargs):
+        return Message.objects.filter(owner=self.request.user)
 
 
 class MessageDeleteView(LoginRequiredMixin, DeleteView):
     model = Message
     success_url = reverse_lazy("mailing:message_list")
-
-    def get_object(self, queryset=None):
-        self.object = super().get_object(queryset)
-        if not self.request.user.is_superuser:
-            raise PermissionDenied
-        return self.object
 
 
 class MailingAttemptCreateView(LoginRequiredMixin, CreateView):

@@ -34,17 +34,19 @@
 
                 {% for object in object_list %}
                 <tr>
+
                     <td>{{ object.subject }}</td>
                     <td>{{ object.content|truncatechars:30 }}</td>
-                    {% if user.is_authenticated %}
                     <td>{{ object.owner }}</td>
-                    {% endif %}
+
                     <td>
+                        {% if user == object.owner or user.is_superuser%}
                         <a class="btn btn-primary btn-sm" href="{% url 'mailing:message_detail' object.pk%}">Посмотреть
                             &raquo;</a>
                         <a class="btn btn-primary btn-sm" href="{% url 'mailing:message_update' object.pk%}">Редактировать
                             &raquo;</a>
                         <a class="btn btn-danger btn-sm" href="{% url 'mailing:message_delete' object.pk%}">Удалить</a>
+                        {% endif %}
                     </td>
 
                 </tr>

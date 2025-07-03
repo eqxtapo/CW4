@@ -16,24 +16,27 @@ def run_mail(request, pk):
     """Функция запуска рассылки по требованию"""
     mailing = get_object_or_404(Mailing, id=pk)
     for recipient in mailing.client.all():
-        try:
-            mailing.status = Mailing.LAUNCHED
-            send_mail(
-                subject=mailing.message.subject,
-                message=mailing.message.content,
-                from_email=EMAIL_HOST_USER,
-                recipient_list=[recipient.mail],
-                fail_silently=False,
-            )
-
-        except Exception as e:
-            print(f"Ошибка при отправке письма для {recipient.mail}: {str(e)}")
-            AttemptMailing.objects.create(
-                date_attempt=timezone.now(),
-                status=Mailing.FINISHED,
-                server_response=str(e),
-                mailing=mailing,
-            )
+        if mailing.is_active is True:
+            try:
+                mailing.status = Mailing.LAUNCHED
+                mailing.first_sending = timezone.now()
+                send_mail(
+                    subject=mailing.message.subject,
+                    message=mailing.message.content,
+                    from_email=EMAIL_HOST_USER,
+                    recipient_list=[recipient.mail],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                print(f"Ошибка при отправке письма для {recipient.mail}: {str(e)}")
+                AttemptMailing.objects.create(
+                    date_attempt=timezone.now(),
+                    status=Mailing.FINISHED,
+                    server_response=str(e),
+                    mailing=mailing,
+                )
+        else:
+            print(f"Рассылка заблокирована!")
     if mailing.end_sending and mailing.end_sending <= timezone.now():
 
         mailing.status = Mailing.FINISHED
@@ -73,5 +76,6 @@ def get_attempt_from_cache():
 def block_mailing(request, pk):
     mailing = Mailing.objects.get(pk=pk)
     mailing.is_active = {mailing.is_active: False, not mailing.is_active: True}[True]
+    mailing.end_sending = timezone.now()
     mailing.save()
     return redirect(reverse("mailing:mailing_list"))

@@ -14,7 +14,7 @@ class Command(BaseCommand):
             status__in=[Mailing.CREATED, Mailing.LAUNCHED]
         )
         for mailing in mailings:
-            for recipient in mailing.recipients.all():
+            for recipient in mailing.client.all():
                 try:
                     send_mail(
                         mailing.message.subject,
@@ -26,9 +26,10 @@ class Command(BaseCommand):
                     AttemptMailing.objects.create(
                         date_attempt=timezone.now(),
                         status=AttemptMailing.STATUS_OK,
-                        server_response="Email отправлен",
+                        response="Email отправлен",
                         mailing=mailing,
                     )
+
                     print(
                         f"Сообщение {mailing.message.subject} успешно отправлено получателю: {recipient.email}"
                     )
@@ -36,7 +37,7 @@ class Command(BaseCommand):
                     AttemptMailing.objects.create(
                         date_attempt=timezone.now(),
                         status=AttemptMailing.STATUS_NOK,
-                        server_response=str(e),
+                        response=str(e),
                         mailing=mailing,
                     )
                     print(str(e))
