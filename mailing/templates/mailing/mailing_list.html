@@ -37,19 +37,19 @@
                     <td>{{ object.end_sending|date:"d M Y" }}</td>
                     <td>{{ object.status }}</td>
                     <td>
-                        {% if user == object.owner or user.is_superuser%}
+                        {% if perms.mailing.can_block_mailing or user == object.owner%}
                         {% if object.is_active %}
                                 <a type="button" class="btn btn-danger btn-sm"
                                    href="{% url 'mailing:block_mailing' object.pk %}">Заблокировать</a>
                             {% else %}
                                 <a type="button" class="btn btn-success btn-sm"
                                    href="{% url 'mailing:block_mailing' object.pk %}">Разблокировать</a>
-                            {% endif %}
+                        {% endif %}
                         {% else %}
                         {{object.is_active|yesno:"Активна, Не активна"}}
                         {% endif %}
                     </td>
-                    {% if user == object.owner or user.is_superuser %}
+                    {% if user == object.owner or perms.mailing.can_block_mailing %}
                     <td>{{ object.owner }}</td>
                     {% endif %}
                     <td>

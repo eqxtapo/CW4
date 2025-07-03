@@ -22,6 +22,7 @@ from django.views.generic import (
     ListView,
     TemplateView,
     UpdateView,
+    View
 )
 
 from config.settings import EMAIL_HOST_USER
@@ -33,6 +34,7 @@ from users.forms import (
     UserUpdateForm,
 )
 from users.models import User
+from django.http import HttpResponseForbidden
 
 # Create your views here.
 
@@ -78,6 +80,7 @@ class UserListView(ListView):
     context_object_name = "users_list"
 
 
+
 class UserDetailView(DetailView):
     model = User
     form_class = UserUpdateForm
@@ -86,12 +89,23 @@ class UserDetailView(DetailView):
 class UserUpdateView(UpdateView):
     model = User
     form_class = UserUpdateForm
+    success_url = reverse_lazy("mailing:message_list")
 
 
 class UserDeleteView(DeleteView):
     model = User
     form_class = UserUpdateForm
 
+
+# class UserBlockView(LoginRequiredMixin, View):
+#     def post(self, request, pk):
+#         system_user = get_object_or_404(User, pk=pk)
+#         if not request.user.has_perm("users.can_block_user"):
+#             return HttpResponseForbidden("У вас нет прав для блокировки пользователя")
+#
+#         system_user.is_active = not system_user.is_active
+#         system_user.save()
+#         return redirect("users:users")
 
 class UserPasswordResetConfirmView(SuccessMessageMixin, PasswordResetConfirmView):
     """Представление установки нового пароля"""

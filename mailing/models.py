@@ -108,6 +108,7 @@ class Mailing(models.Model):
         ordering = ["first_sending"]
         permissions = [
             ("set_is_active", "set is active"),
+            ("can_block_mailing", "блокировка рассылки")
         ]
 
 

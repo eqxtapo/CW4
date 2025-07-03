@@ -34,7 +34,7 @@
                          <li>
                              <a class="nav-link" href="{% url 'mailing:contacts' %}">Контакты</a>
                          </li>
-                        {% if user.is_superuser %}
+                        {% if perms.users.can_block_user %}
                         <li>
                              <a class="nav-link" href="{% url 'users:user_list' %}">Список пользователей</a>
                          </li>
