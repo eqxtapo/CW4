@@ -27,11 +27,29 @@
         {% endif %}
         {% if perms.users.can_block_user and perms.mailing.can_block_mailing%}
 
-          <a type="button" class="btn btn-danger btn-sm"
-             href="{% url 'users:user_list'  %}">Заблокировать</a>
+          {% if user.is_active == True %}
+          <li class="list-group-item"> {{user.username}} - {{user.email}}
+            <form method="post" action="{% url 'users:block_user' user.id %}">
+              {% csrf_token %}
+              <button class="btn btn-outline-danger"
+                      style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                      type="submit">заблокировать
+              </button>
+            </form>
+          </li>
+          {% else %}
+          <li class="list-group-item"> {{user.username}} - {{user.email}}
+            <form method="post" action="{% url 'users:unblock_user' user.id %}">
+              {% csrf_token %}
+              <button class="btn btn-outline-success"
+                      style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
+                      type="submit">разблокировать
+              </button>
+            </form>
+          </li>
+          {% endif %}
 
-
-         {% endif %}
+          {% endif %}
         </div>
         </div>
       </div>

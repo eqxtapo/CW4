@@ -33,6 +33,8 @@ class User(AbstractUser):
     token = models.CharField(
         max_length=100, verbose_name="Token", blank=True, null=True
     )
+    # is_active = models.BooleanField(
+    #     default=True, verbose_name="активна", null=True, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -42,6 +44,7 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
         permissions = [
             ("can_block_user", "Блокировка пользователя"),
+            ("can_view_all_user_lists", "Просмотр всех пользователей")
         ]
 
     def __str__(self):
