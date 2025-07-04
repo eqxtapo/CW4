@@ -15,7 +15,8 @@ from users.views import (
     UserUpdateView,
     email_verification,
     user_logout,
-    # UserBlockView
+    UserBlockView,
+    UserUnblockView
 )
 
 
@@ -32,5 +33,6 @@ urlpatterns = [
     path("update/<int:pk>/", UserUpdateView.as_view(), name="user_update"),
     path("delete/<int:pk>/", UserDeleteView.as_view(), name="user_delete"),
     path("password-recovery/", PasswordRecoveryView.as_view(), name="password_recovery"),
-    # path("block_user/<int:pk>", UserBlockView.as_view, name="block_user")
+    path("block_user/<int:pk>", UserBlockView.as_view(), name="block_user"),
+    path("unblock_user/<int:pk>", UserUnblockView.as_view(), name="unblock_user")
 ]
