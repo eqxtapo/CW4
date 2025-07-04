@@ -64,8 +64,6 @@ class MailingListView(ListView):
     model = Mailing
     template_name = "mailing/mailing_list.html"
 
-    def get_queryset(self):
-        return Mailing.objects.filter(owner=self.request.user)
 
     def get_queryset(self):
         if self.request.user.has_perm("mailing.can_block_mailing"):

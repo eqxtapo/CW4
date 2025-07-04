@@ -6,6 +6,7 @@ from django.urls import path
 from django.views.decorators.cache import cache_page
 
 from users.apps import UsersConfig
+from users.service import block_user
 from users.views import (
     PasswordRecoveryView,
     UserCreateView,
@@ -15,8 +16,6 @@ from users.views import (
     UserUpdateView,
     email_verification,
     user_logout,
-    UserBlockView,
-    UserUnblockView
 )
 
 
@@ -33,6 +32,5 @@ urlpatterns = [
     path("update/<int:pk>/", UserUpdateView.as_view(), name="user_update"),
     path("delete/<int:pk>/", UserDeleteView.as_view(), name="user_delete"),
     path("password-recovery/", PasswordRecoveryView.as_view(), name="password_recovery"),
-    path("block_user/<int:pk>", UserBlockView.as_view(), name="block_user"),
-    path("unblock_user/<int:pk>", UserUnblockView.as_view(), name="unblock_user")
+    path("block_user/<int:pk>", block_user, name="block_user"),
 ]

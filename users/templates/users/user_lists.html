@@ -25,23 +25,17 @@
                 <a class="btn btn-dark" href="{% url 'users:user_delete' object.pk %}" role="button">Удалить</a>
                 {% endif %}
                 {% if perms.users.can_block_user and perms.mailing.can_block_mailing%}
-                {% if user.is_active%}
-                <form method="post" action="{% url 'users:block_user' user.id %}">
-                  {% csrf_token %}
-                  <button class="btn btn-outline-danger"
-                          style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
-                          type="submit">заблокировать
-                  </button>
-                </form>
-                {% else %}
-                <form method="post" action="{% url 'users:unblock_user' user.id %}">
-                  {% csrf_token %}
-                  <button class="btn btn-outline-success"
-                          style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"
-                          type="submit">разблокировать
-                  </button>
-                </form>
-                {% endif %}
+                <td>
+                  {% if object.is_active %}
+                  <a type="button" class="btn btn-danger"
+                     href="{% url 'users:block_user' object.pk %}">Заблокировать</a>
+                  {% else %}
+                  <a type="button" class="btn btn-success"
+                     href="{% url 'users:block_user' object.pk %}">Разблокировать</a>
+                  {% endif %}
+                  {% else %}
+                  {{object.is_active|yesno:"Активный, Не активный"}}
+                </td>
                 {% endif %}
               </div>
             </div>

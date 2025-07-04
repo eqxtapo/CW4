@@ -1,7 +1,9 @@
 import secrets
 
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import Group
 from django.contrib.auth.views import (
     LoginView,
     PasswordResetConfirmView,
@@ -35,8 +37,6 @@ from users.forms import (
 )
 from users.models import User
 from django.http import HttpResponseForbidden
-
-# Create your views here.
 
 
 def user_logout(request):
@@ -80,8 +80,8 @@ class UserListView(ListView):
     context_object_name = "users_list"
 
     def get_queryset(self):
-        if self.request.user.has_perm("users.can_view_all_user_lists"):
-            return User.objects.all()
+        managers = Group.objects.get(name='manager')
+        return User.objects.exclude(is_superuser=True).exclude(groups__in=[managers])
 
 
 
@@ -101,27 +101,6 @@ class UserDeleteView(DeleteView):
     form_class = UserUpdateForm
 
 
-class UserBlockView(LoginRequiredMixin, View):
-
-    def post(self, request, pk):
-        user = get_object_or_404(User, id=pk)
-
-        user.is_active = False
-        user.save()
-
-        return redirect("users:user_list")
-
-
-class UserUnblockView(LoginRequiredMixin, View):
-
-    def post(self, request, pk):
-        user = get_object_or_404(User, id=pk)
-
-        user.is_active = True
-        user.save()
-
-        return redirect("users:user_list")
-
 class UserPasswordResetConfirmView(SuccessMessageMixin, PasswordResetConfirmView):
     """Представление установки нового пароля"""
 
@@ -136,7 +115,7 @@ class UserPasswordResetConfirmView(SuccessMessageMixin, PasswordResetConfirmView
         return context
 
 
-# flake8: noqa
+
 class UserForgotPasswordView(SuccessMessageMixin, PasswordResetView):
     """Представление по сбросу пароля по почте"""
 
