@@ -77,13 +77,11 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
     template_name = "mailing/mailing_form.html"
     success_url = reverse_lazy("mailing:mailing_list")
 
-    def get_queryset(self):
-        return Mailing.objects.filter(owner=self.request.user)
 
     def form_valid(self, form):
-        recipient = form.save()
-        recipient.owner = self.request.user
-        recipient.save()
+        client = form.save()
+        client.owner = self.request.user
+        client.save()
         return super().form_valid(form)
 
 
